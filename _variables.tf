@@ -1,0 +1,10 @@
+# Define variables
+variable "project_name" {}
+variable "environment" {}
+variable "region" {}
+variable "domain_name" {}
+variable "route53_zone_id" {}
+variable "vpc_cidr" {}
+variable "public_subnet_cidrs" {}
+variable "private_subnet_cidrs" {}
+variable "secure_subnet_cidrs" {}
