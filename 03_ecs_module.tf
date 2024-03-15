@@ -25,11 +25,11 @@ module "ecs_cluster" {
           cpu       = 512
           memory    = 1024
           essential = true
-          image     = "public.ecr.aws/aws-containers/ecsdemo-frontend:776fd50"
+          image     = "637423443220.dkr.ecr.us-east-1.amazonaws.com/workshop-1-app1:latest"
           port_mappings = [
             {
               name          = "ecs-sample"
-              containerPort = 3000
+              containerPort = 8000
               protocol      = "tcp"
             }
           ]
@@ -44,7 +44,7 @@ module "ecs_cluster" {
         service = {
           target_group_arn = module.alb.target_groups["ex_ecs"].arn
           container_name   = "ecs-sample"
-          container_port   = 3000
+          container_port   = 8000
         }
       }
 
@@ -52,8 +52,8 @@ module "ecs_cluster" {
       security_group_rules = {
         alb_ingress_3000 = {
           type                     = "ingress"
-          from_port                = 3000
-          to_port                  = 3000
+          from_port                = 8000
+          to_port                  = 8000
           protocol                 = "tcp"
           description              = "Service port"
           source_security_group_id = module.alb.security_group_id
@@ -69,6 +69,8 @@ module "ecs_cluster" {
     }
   }
 
+  depends_on = [ aws_ecr_repository.app1 ]
+
 }
 
 
@@ -78,7 +80,8 @@ module "alb" {
 
   name = "${var.project_name}-${var.environment}-ecs"
 
-  load_balancer_type = "application"
+  load_balancer_type         = "application"
+  enable_deletion_protection = false
 
   vpc_id  = aws_vpc.main.id
   subnets = [aws_subnet.public_subnet_1.id, aws_subnet.public_subnet_2.id]
